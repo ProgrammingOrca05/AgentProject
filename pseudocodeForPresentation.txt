@@ -1,0 +1,18 @@
+SETUP → zones, drones, police, pedestrians, suspects
+
+EVERY TICK:
+  spawn suspects (low rate)
+  move people
+
+  drones:
+    patrol → detect
+    real suspect → track + alert police
+    false positive → track pedestrian + alert police
+    manage energy & failures
+
+  police:
+    go to target
+    arrest suspect OR release pedestrian
+
+  count arrests & false positives
+  update plots

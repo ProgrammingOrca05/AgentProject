@@ -1,0 +1,50 @@
+INITIALIZE:
+  set parameters (detection radius, failure rate, false positive rate)
+  create zones
+  create drones
+  create police
+  create pedestrians
+  create initial suspects
+  arrests = 0
+  falsePositives = 0
+
+LOOP EACH TICK:
+  toggle day/night
+  maybe spawn suspect
+  move pedestrians
+  move suspects
+  move police
+
+  FOR each drone:
+    if failed -> repair
+    else:
+      maybe fail
+      consume energy
+      recharge if needed
+
+      if patrolling:
+        move randomly inside zone
+        if real suspect nearby:
+          track suspect
+          alert nearest police
+        else if random false positive:
+          select pedestrian
+          mark as false target
+          track pedestrian
+          alert police (false)
+
+      if tracking:
+        follow target
+        if target leaves zone -> stop tracking
+
+  FOR each police:
+    if responding to real suspect:
+      move toward suspect
+      if close -> remove suspect, arrests++
+
+    if responding to false target:
+      move toward pedestrian
+      if close -> release pedestrian, falsePositives++
+
+  update plots (arrests vs false positives)
+  tick
